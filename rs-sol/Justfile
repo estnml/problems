@@ -1,0 +1,11 @@
+build_with_asm_release:
+    RUSTFLAGS="--emit=asm" cargo build --release
+
+build_with_asm_release_valgrind:
+    RUSTFLAGS="--emit=asm" cargo build --release && valgrind ./target/release/lc_sols-rs
+
+build_and_run_valgrind:
+    cargo build --release && valgrind ./target/release/lc_sols-rs
+
+test_all:
+    cargo test

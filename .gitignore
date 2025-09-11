@@ -1,0 +1,7 @@
+.notes
+.git
+Dockerfile
+sols-ui
+rs-sol/target
+py-sol
+py-sol/__pycache__

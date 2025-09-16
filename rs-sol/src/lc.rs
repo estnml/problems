@@ -1,5 +1,5 @@
 use core::num;
-use std::{env::current_exe, process::id};
+use std::{cell::RefCell, env::current_exe, process::id, rc::Rc};
 
 use crate::Solution;
 
@@ -17,10 +17,30 @@ impl ListNode {
     }
 }
 
+// Definition for a binary tree node.
+#[derive(Debug, PartialEq, Eq)]
+pub struct TreeNode {
+    pub val: i32,
+    pub left: Option<Rc<RefCell<TreeNode>>>,
+    pub right: Option<Rc<RefCell<TreeNode>>>,
+}
+
+impl TreeNode {
+    #[inline]
+    pub fn new(val: i32) -> Self {
+        TreeNode {
+            val,
+            left: None,
+            right: None,
+        }
+    }
+}
+
 impl Solution {
     /// 1.e Two Sum [n,n]
     pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
-        let mut num_map = std::collections::HashMap::with_capacity(nums.len());
+        let mut num_map =
+            std::collections::HashMap::with_capacity(nums.len());
         let mut result_vec = Vec::with_capacity(2);
 
         for i in 0..nums.len() {
@@ -36,15 +56,45 @@ impl Solution {
         result_vec
     }
 
-    /// 2.m Add Two Numbers
+    /// 2.m Add Two Numbers [?,?]
     pub fn add_two_numbers(
         l1: Option<Box<ListNode>>,
         l2: Option<Box<ListNode>>,
     ) -> Option<Box<ListNode>> {
-        todo!()
+        match (l1, l2) {
+            (None, None) => None,
+            (None, Some(node)) | (Some(node), None) => {
+                Some(Box::new(ListNode {
+                    val: node.val,
+                    next: Solution::add_two_numbers(node.next, None),
+                }))
+            }
+            (Some(l1_node), Some(l2_node)) => {
+                let sum = l1_node.val + l2_node.val;
+
+                Some(Box::new(ListNode {
+                    val: sum % 10,
+                    next: if sum >= 10 {
+                        let carry_node = Some(Box::new(ListNode::new(1)));
+                        Solution::add_two_numbers(
+                            Solution::add_two_numbers(
+                                carry_node,
+                                l1_node.next,
+                            ),
+                            l2_node.next,
+                        )
+                    } else {
+                        Solution::add_two_numbers(
+                            l1_node.next,
+                            l2_node.next,
+                        )
+                    },
+                }))
+            }
+        }
     }
 
-    /// 3. Longest Substring Without Repeating Characters
+    /// 3.m Longest Substring Without Repeating Characters
     pub fn length_of_longest_substring(s: String) -> i32 {
         let mut chars_in_window: std::collections::HashMap<char, usize> =
             std::collections::HashMap::with_capacity(s.len());
@@ -53,6 +103,51 @@ impl Solution {
         // sliding window is a contiguous slice/subarray in an array that meets the condition.
         // in this problem, the condition is: characters must not repeat in window.
 
+        todo!()
+    }
+
+    /// 4.h Median of Two Sorted Arrays
+    pub fn find_median_sorted_arrays(
+        nums1: Vec<i32>,
+        nums2: Vec<i32>,
+    ) -> f64 {
+        todo!()
+    }
+
+    /// 5. Longest Palindromic Substring
+    pub fn longest_palindrome(s: String) -> String {
+        todo!()
+    }
+
+    /// 6. Zigzag Conversion
+    pub fn convert(s: String, num_rows: i32) -> String {
+        todo!()
+    }
+
+    /// 7. Reverse Integer
+    pub fn reverse(x: i32) -> i32 {
+        todo!()
+    }
+
+    /// 8. String to Integer (atoi)
+    pub fn my_atoi(s: String) -> i32 {
+        todo!()
+    }
+
+    /// 9. Palindrome Number
+    pub fn is_palindrome(x: i32) -> bool {
+        todo!()
+    }
+
+    /// 10. Regular Expression Matching
+    pub fn is_match(s: String, p: String) -> bool {
+        todo!()
+    }
+
+    /// 94. Binary Tree Inorder Traversal
+    pub fn inorder_traversal(
+        root: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Vec<i32> {
         todo!()
     }
 
@@ -91,7 +186,10 @@ impl Solution {
     }
 
     /// 1431.e Kids With the Greatest Number of Candies [n,n]
-    pub fn kids_with_candies(candies: Vec<i32>, extra_candies: i32) -> Vec<bool> {
+    pub fn kids_with_candies(
+        candies: Vec<i32>,
+        extra_candies: i32,
+    ) -> Vec<bool> {
         let max_candies = candies.iter().max();
 
         if max_candies.is_none() {
@@ -111,8 +209,9 @@ impl Solution {
 
     /// 345.e Reverse Vowels of a String [n,1]
     pub fn reverse_vowels(s: String) -> String {
-        let vowels =
-            std::collections::HashSet::from(['a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U']);
+        let vowels = std::collections::HashSet::from([
+            'a', 'A', 'e', 'E', 'i', 'I', 'o', 'O', 'u', 'U',
+        ]);
 
         let mut bytes = s.into_bytes();
 
@@ -125,7 +224,8 @@ impl Solution {
             }
 
             // ai
-            while left < right && !vowels.contains(&(bytes[right] as char)) {
+            while left < right && !vowels.contains(&(bytes[right] as char))
+            {
                 right -= 1;
             }
 

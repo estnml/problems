@@ -1,12 +1,19 @@
 [package]
 name = "rs-sol"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
+authors = ["Esat Mustafa Namli"]
 
 [dependencies]
 
 
-# change default name of the binary, to use with valgrind
 [[bin]]
 name = "lc_sols-rs"
 path = "src/main.rs"
+
+
+[build-dependencies]
+regex = { version = "1.11" }
+
+[dev-dependencies]
+proptest = "1.7.0"

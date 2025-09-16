@@ -3,5 +3,6 @@
 Dockerfile
 sols-ui
 rs-sol/target
+rs-sol/build.rs
 py-sol
 py-sol/__pycache__

@@ -9,3 +9,9 @@ build_and_run_valgrind:
 
 test_all:
     cargo test
+
+test_all_with_valgrind:
+    cargo test --no-run --message-format=json | jq -r "select(.profile.test == true) | .filenames[]" | xargs -n1 valgrind --leak-check=full
+
+run_backtrace:
+    RUST_BACKTRACE=1 cargo run
